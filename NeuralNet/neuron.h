@@ -10,6 +10,11 @@ public:
 		for(int i = 0; i < m_numInputs + 1; ++i)
 			m_weights.push_back(randFloat(-1, 1));
 	}
+
+	std::vector<double> getWeights() const
+	{
+		return m_weights;
+	}
 private:
 	int m_numInputs;
 	std::vector<double> m_weights;
