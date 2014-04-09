@@ -10,7 +10,7 @@ public:
 	std::vector<double> GetWeights() const;
 	int GetNumberOfWeights() const;
 	void PutWeights(std::vector<double>& weights);
-	std::vector<int> Update(const std::vector<double>& inputs);
+	std::vector<int> Update(std::vector<int> inputs);
 
 private:
 	int m_numInputs;

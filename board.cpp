@@ -2,12 +2,20 @@
 
 #include <sstream>
 #include <assert.h>
+#include <chrono>
+
+
+Board::Board()
+	: Board(std::chrono::system_clock::now().time_since_epoch().count())
+{}
 
 Board::Board(unsigned seed)
 	: m_generator(seed)
 {
 	for(int i = 0; i < 16; ++i)
 		m_state[i] = 0;
+	add();
+	add();
 }
 
 Board::Board(unsigned seed, const int state[])
@@ -157,12 +165,30 @@ void Board::swap(int a, int b)
 	m_state[a] = temp;
 }
 
+void Board::turn(int idir)
+{
+	assert(dir < 4 && dir >= 0);
+
+	Direction dir;
+	switch(idir)
+	{
+		case 0:	dir = up; break;
+		case 1:	dir = right; break;
+		case 2:	dir = down; break;
+		case 3:	dir = left; break;
+	}
+	turn(dir);
+}
+
 void Board::turn(Direction dir)
 {
+	Board original = *this;
 	move(dir);
 	collapse(dir);
 	move(dir);
-	add();
+
+	if(original != *this)
+		add();
 }
 
 void Board::move(Direction dir)
@@ -246,6 +272,15 @@ int Board::operator[](int index) const
 	return m_state[index];
 }
 
+std::vector<int> Board::GetValues() const
+{
+	std::vector<int> outputs;
+	for(int i = 0; i < 16; ++i)
+		outputs.push_back(m_state[i]);
+	return outputs;
+}
+
+
 int Board::max() const
 {
 	int value = 0;
@@ -277,4 +312,10 @@ bool Board::operator<(const Board& other) const
 			return false;
 	}
 	return false;
+}
+
+std::ostream& operator<< (std::ostream& stream, const Board board)
+{
+	stream << board.str();
+	return stream;
 }

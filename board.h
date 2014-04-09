@@ -5,28 +5,31 @@ class Board
 {
 public:
 	enum Direction {
-		up,
+		up = 0,
 		right,
 		down,
 		left,
 	};
 
+	Board();
 	explicit Board(unsigned seed);
 	Board(unsigned seed, const int state[]);
 
+	void turn(int dir);
 	void turn(Direction dir);
 
-	void move(Direction dir);
-	void collapse(Direction dir);
+	std::vector<int> GetValues() const;
+	bool complete() const;
+	int max() const;
 
 	std::string str() const;
-	void add();
 
-	bool complete() const;
+	friend std::ostream& operator<< (std::ostream& stream, const Board board);
+
+
 
 	int operator[](int index) const;
 
-	int max() const;
 
 	bool operator==(const Board& other) const;
 	bool operator!=(const Board& other) const { return !this->operator==(other); }
@@ -37,6 +40,10 @@ public:
 	bool operator>=(const Board& other) const { return !this->operator<(other);}
 
 private:
+
+	void move(Direction dir);
+	void collapse(Direction dir);
+	void add();
 
 	static int next(Direction dir, int current);
 	static int nextRow(Direction dir, int current);
